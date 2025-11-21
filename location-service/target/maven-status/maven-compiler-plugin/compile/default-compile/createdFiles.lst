@@ -1,0 +1,5 @@
+com/skupina1/location/userLocation/UserLocation.class
+com/skupina1/location/userRepo/EntityManagerProducer.class
+com/skupina1/location/App.class
+com/skupina1/location/userRepo/UserRepo.class
+com/skupina1/location/userRepo/UserRepoProducer.class
