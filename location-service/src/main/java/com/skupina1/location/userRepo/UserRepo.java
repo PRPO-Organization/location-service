@@ -1,6 +1,7 @@
 package com.skupina1.location.userRepo;
 import com.skupina1.location.userLocation.UserLocation;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.*;
 import jakarta.inject.Inject;
@@ -9,30 +10,71 @@ import net.postgis.jdbc.PGgeography;
 import org.bson.types.ObjectId;
 import org.locationtech.jts.geom.Point;
 
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.List;
+
 @ApplicationScoped
 public  class UserRepo {
     @Inject
-    public EntityManager em;
+    @MyEM
+    @PersistenceContext(unitName = "postgisPU")
+    private EntityManager em;
     public UserRepo() {
     }
-    @Transactional
-    public void addUserLocation(UserLocation userLocation) {
-        em.persist(userLocation);
+    public UserLocation addUserLocation(UserLocation userLocation) throws Exception {
+        try{
+            em.persist(userLocation);
+            em.flush();
+            em.refresh(userLocation);
+            return userLocation;
+        }catch(Exception e){
+            throw new Exception(e);
+        }
     }
     //function to update the user location
-    @Transactional
-    public boolean changeLocation(ObjectId objectId , Point newLocation){
-        String oidStr = objectId.toString();
-        UserLocation userLocation = em.find(UserLocation.class, oidStr);
-        if (userLocation == null){
-            return false;
+    public boolean changeLocation(String  oidStr, Point newLocation) throws Exception {
+        try{
+            List<UserLocation> userLocations = this.findLocationByUserId(oidStr);
+            if (userLocations.isEmpty()){
+                return false ;
+            }
+            if(userLocations.size()!=1){
+                return false ;
+            }
+            UserLocation userLocation = userLocations.get(0);
+            userLocation.setLocation(newLocation);
+            em.flush();
+            em.refresh(userLocation);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        userLocation.setLocation(newLocation);
-        return true;
     }
-    public UserLocation findUserLocation(ObjectId objectId){
-        String oidStr = objectId.toString();
-        return em.find(UserLocation.class,oidStr);
+    public void refresh(UserLocation location) {
+        em.refresh(location);
+    }
+    public UserLocation findUserLocation(long id){
+        return em.find(UserLocation.class,id);
+    }
+    public EntityTransaction  getTransaction(){
+        return em.getTransaction();
+    }
+    public List<UserLocation> findLocationByUserId(String oidStr){
+        return  em. createNamedQuery("UserLocation.findByUserId",UserLocation.class)
+                .setParameter("id",oidStr)
+                .getResultList();
+
+    }
+    public UserLocation getUserLocation(String oidStr){
+        List<UserLocation> userLocations = this.findLocationByUserId(oidStr);
+        if(userLocations.isEmpty()){
+            return null;
+        }
+        if (userLocations.size()!=1){
+            return null;
+        }
+        return userLocations.get(0);
     }
 
     //function to find the closest neighbour using a native named query

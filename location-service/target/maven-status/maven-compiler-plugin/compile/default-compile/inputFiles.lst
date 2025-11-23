@@ -1,5 +1,12 @@
-/home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/App.java
+/home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/LocationApplication.java
 /home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/userRepo/UserRepo.java
+/home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/converter/GeometryConverter.java
 /home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/userRepo/UserRepoProducer.java
+/home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/listener/DataSourceConfig.java
+/home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/userLocation/UserLocationDTO.java
 /home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/userLocation/UserLocation.java
+/home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/userRepo/DistanceDTO.java
+/home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/userLocation/LocationDTO.java
+/home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/userResource/UserLocationResource.java
 /home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/userRepo/EntityManagerProducer.java
+/home/david/fri/3letnik/1/prpo/prpo-projekt/location-service/location-service/src/main/java/com/skupina1/location/userRepo/MyEM.java

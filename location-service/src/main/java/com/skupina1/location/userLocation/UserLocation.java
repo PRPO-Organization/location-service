@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import net.postgis.jdbc.PGgeography;
 import org.bson.types.ObjectId;
+import com.skupina1.location.converter.GeometryConverter;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -31,14 +32,22 @@ import org.locationtech.jts.geom.GeometryFactory;
                 resultClass = UserLocation.class
         )
 })
+@NamedQueries({
+        @NamedQuery(
+                name = "UserLocation.findByUserId",
+                query = "select u from UserLocation u where u.userId = :id"
+        )
+
+})
 @Table(name="user_locations")
 public class UserLocation{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name="user_id")
     private String userId;
-    @Column(columnDefinition = "geography(Point,4326)")
+    @Convert(converter = GeometryConverter.class)
+    @Column(name="location",columnDefinition = "geography")
     private Point location;
     public UserLocation(){
 
@@ -58,6 +67,9 @@ public class UserLocation{
     }
     public ObjectId getObjectId() {
         return new ObjectId(userId);
+    }
+    public Long getId() {
+        return id;
     }
 
 }
