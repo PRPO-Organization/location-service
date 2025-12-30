@@ -33,9 +33,12 @@ public  class UserRepo {
         }
     }
     //function to update the user location
-    public boolean changeLocation(String  oidStr, Point newLocation) throws Exception {
+    public boolean changeLocation(Long id, Point newLocation) throws Exception {
+        if (id == null) {
+            return false;
+        }
         try{
-            List<UserLocation> userLocations = this.findLocationByUserId(oidStr);
+            List<UserLocation> userLocations = this.findLocationByUserId(id);
             if (userLocations.isEmpty()){
                 return false ;
             }
@@ -60,14 +63,20 @@ public  class UserRepo {
     public EntityTransaction  getTransaction(){
         return em.getTransaction();
     }
-    public List<UserLocation> findLocationByUserId(String oidStr){
+    public List<UserLocation> findLocationByUserId(Long id){
+        if (id == null){
+            return null;
+        }
         return  em. createNamedQuery("UserLocation.findByUserId",UserLocation.class)
-                .setParameter("id",oidStr)
+                .setParameter("id",id)
                 .getResultList();
 
     }
-    public UserLocation getUserLocation(String oidStr){
-        List<UserLocation> userLocations = this.findLocationByUserId(oidStr);
+    public UserLocation getUserLocation(Long id){
+        if (id == null){
+            return null;
+        }
+        List<UserLocation> userLocations = this.findLocationByUserId(id);
         if(userLocations.isEmpty()){
             return null;
         }

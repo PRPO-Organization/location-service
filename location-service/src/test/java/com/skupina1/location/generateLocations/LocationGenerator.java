@@ -34,7 +34,7 @@ public class LocationGenerator {
             double lon = getRandomLongitude();
             Point point = geometryFactory.createPoint(new Coordinate(lon, lat));
             String userId = UUID.randomUUID().toString();
-            UserLocation userLocation = new UserLocation(userId,point);
+            UserLocation userLocation = new UserLocation(point);
             userLocations.add(userLocation);
         }
         return userLocations;

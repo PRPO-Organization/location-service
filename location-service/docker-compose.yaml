@@ -1,0 +1,34 @@
+
+services:
+  postgis:
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U location-user -d locations" ]
+    image: postgis/postgis:16-3.4
+    container_name: location-service-postgis
+    restart: always
+    environment:
+      POSTGRES_DB: locations
+      POSTGRES_USER: location-user
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/postgis-init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  jakarta:
+    build: .
+    container_name: locations-backend
+    depends_on:
+      - postgis
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: postgis
+      DB_PORT: 5432
+      DB_NAME: locations
+      DB_USER: location-user
+      DB_PASS: password123
+
+volumes:
+  pgdata:

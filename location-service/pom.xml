@@ -120,6 +120,21 @@
           <version>5.0.2.Final</version>
           <scope>test</scope>
       </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.core</groupId>
+          <artifactId>jersey-server</artifactId>
+          <version>3.1.5</version>
+      </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.containers</groupId>
+          <artifactId>jersey-container-grizzly2-http</artifactId>
+          <version>3.1.5</version>
+      </dependency>
+      <dependency>
+          <groupId>org.glassfish.jersey.inject</groupId>
+          <artifactId>jersey-hk2</artifactId>
+          <version>3.1.5</version>
+      </dependency>
   </dependencies>
 
 </project>

@@ -5,7 +5,9 @@ com/skupina1/location/listener/DataSourceConfig.class
 com/skupina1/location/userRepo/UserRepo.class
 com/skupina1/location/userLocation/LocationDTO.class
 com/skupina1/location/userRepo/EntityManagerProducer.class
+com/skupina1/location/config/PreflightRequestFilter.class
 com/skupina1/location/userResource/UserLocationResource.class
 com/skupina1/location/userRepo/DistanceDTO.class
+com/skupina1/location/config/CorsFilter.class
 com/skupina1/location/userRepo/MyEM.class
 com/skupina1/location/converter/GeometryConverter.class

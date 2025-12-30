@@ -29,11 +29,11 @@ public class UserLocationResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public Response getLocation(@PathParam("id") String oidStr) {
+    public Response getLocation(@PathParam("id") Long id) {
 
         List<UserLocation> currentLocations;
         try {
-            currentLocations = userRepo.findLocationByUserId(oidStr);
+            currentLocations = userRepo.findLocationByUserId(id);
         } catch (Exception e) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("")
@@ -51,7 +51,7 @@ public class UserLocationResource {
         }
         UserLocation currentLocation = currentLocations.get(0);
         Point point = currentLocation.getLocation();
-        UserLocationDTO currentLocationDTO = new UserLocationDTO(currentLocation.getId(), currentLocation.getUserId(), point.getX(), point.getY());
+        UserLocationDTO currentLocationDTO = new UserLocationDTO(currentLocation.getId(), point.getX(), point.getY());
         return Response.ok(currentLocationDTO).build();
     }
 
@@ -60,10 +60,10 @@ public class UserLocationResource {
     @Transactional
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public Response postLocation(@PathParam("id") String oidStr, LocationDTO userLocation) {
+    public Response postLocation(@PathParam("id") Long id, LocationDTO userLocation) {
         ObjectId oid;
         //System.out.println("POST req");
-        List<UserLocation> locations = userRepo.findLocationByUserId(oidStr);
+        List<UserLocation> locations = userRepo.findLocationByUserId(id);
         if (!locations.isEmpty()) {
             return Response.status(Response.Status.CONFLICT)
                     .entity("location already exists")
@@ -71,7 +71,7 @@ public class UserLocationResource {
         }
         GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
         Point point = gf.createPoint(new Coordinate(userLocation.getLng(), userLocation.getLat()));
-        UserLocation currentLocation = new UserLocation(oidStr , point);
+        UserLocation currentLocation = new UserLocation( point);
         try {
             currentLocation = userRepo.addUserLocation(currentLocation);
         } catch (Exception e) {
@@ -85,7 +85,7 @@ public class UserLocationResource {
                     .entity("location id is null")
                     .build();
         }
-        UserLocationDTO userLocationDTO = new UserLocationDTO(currentLocation.getId(), currentLocation.getUserId(), userLocation.getLat(), userLocation.getLng());
+        UserLocationDTO userLocationDTO = new UserLocationDTO(currentLocation.getId(), userLocation.getLat(), userLocation.getLng());
         return Response.ok(userLocationDTO).build();
     }
 
@@ -94,11 +94,16 @@ public class UserLocationResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     @Transactional
-    public Response patchLocation(@PathParam("id") String oidStr, LocationDTO userLocation) {
+    public Response patchLocation(@PathParam("id") Long id, LocationDTO userLocation) {
+        if (id == null){
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("id is required")
+                    .build();
+        }
         try {
             GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
             Point point = gf.createPoint(new Coordinate(userLocation.getLng(), userLocation.getLat()));
-            boolean exists = userRepo.changeLocation(oidStr, point);
+            boolean exists = userRepo.changeLocation(id , point);
             if (!exists) {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("user location does not exist")
@@ -118,11 +123,16 @@ public class UserLocationResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     @Transactional
-    public Response putLocation(@PathParam("id") String oidStr, UserLocationDTO userLocation) {
+    public Response putLocation(@PathParam("id") Long id, UserLocationDTO userLocation) {
+        if (id == null){
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("id is required")
+                    .build();
+        }
         try {
             GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
             Point point = gf.createPoint(new Coordinate(userLocation.getLng(), userLocation.getLat()));
-            boolean exists = userRepo.changeLocation(oidStr, point);
+            boolean exists = userRepo.changeLocation(id, point);
             if (!exists) {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("user location does not exist")
@@ -142,8 +152,8 @@ public class UserLocationResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/distance/{id}")
     public Response getDistance(
-            @QueryParam("dest") String dest,
-            @PathParam("id") String id
+            @QueryParam("dest") Long dest,
+            @PathParam("id") Long id
     ){
         if(dest==null||id==null){
             return Response.status(Response.Status.BAD_REQUEST)

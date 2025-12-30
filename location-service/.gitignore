@@ -1,0 +1,15 @@
+# Maven
+target/
+*.class
+*.war
+
+# IDEs
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Binaries / drivers
+drivers/*.jar
+payara.jar
